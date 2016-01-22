@@ -1,0 +1,10 @@
+{
+  "applications": {
+    "QoQa": {
+      "applicationId": "Csu3X9Ra2stVGcmhPw2qMYKXAMuIdcIVcs8DUOcJ"
+    },
+    "_default": {
+      "link": "QoQa"
+    }
+  }
+}
