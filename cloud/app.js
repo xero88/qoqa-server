@@ -14,6 +14,7 @@ app.use(parseExpressCookieSession({
 var homeController = require('cloud/controllers/home.js');
 var loginController = require('cloud/controllers/login.js');
 var registerController = require('cloud/controllers/register.js');
+var giftController = require('cloud/controllers/gift.js');
 
 // triggers
 require('cloud/triggers/coupon.js');
@@ -27,7 +28,6 @@ app.use(express.bodyParser());    // Middleware for reading request body
 // Home
 app.get('/', homeController.index);
 
-
 // Login
 app.get('/login', loginController.index);
 app.post('/login', loginController.login);
@@ -36,6 +36,14 @@ app.get('/logout', loginController.logout);
 // Register
 app.get('/register', registerController.index);
 app.post('/register', registerController.register);
+
+// Login
+app.get('/gift', giftController.index);
+app.get('/gift/add', giftController.add);
+app.post('/gift/add', giftController.addSave);
+app.get('/gift/edit/:id', giftController.edit);
+app.put('/gift/edit/:id', giftController.editSave);
+app.get('/gift/delete/:id', giftController.delete);
 
 // Attach the Express app to Cloud Code.
 app.listen();

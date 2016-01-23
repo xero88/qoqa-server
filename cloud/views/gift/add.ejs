@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gift</title>
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+        integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+        crossorigin="anonymous">
+
+</head>
+<body>
+
+<div class="container">
+
+  <div class="alert alert-<%= type %>" role="alert"><%= message %></div>
+
+  <form method="POST" action="/gift/add">
+    <h2 class="form-signin-heading">Gift add</h2>
+
+    <label for="inputName" class="sr-only">Gift</label>
+    <input type="text" name="name" id="inputName" class="form-control" placeholder="Gift name" required>
+
+    <label for="inputType" class="sr-only">Gift type</label>
+    <input type="text" name="giftType" id="inputType" class="form-control" placeholder="Type (todo choose)" required>
+
+    <label for="inputDrawDate" class="sr-only">Draw date</label>
+    <input type="datetime" name="drawDate" id="inputDrawDate" class="form-control" required>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+  </form>
+
+</div>
+
+</body>
+</html>
