@@ -17,7 +17,8 @@ app.use(express.bodyParser());    // Middleware for reading request body
 
 
 // Login
-app.get('/login', loginController.login);
+app.get('/login', loginController.index);
+app.post('/login', loginController.login);
 app.get('/register', registerController.index);
 app.post('/register', registerController.register);
 
