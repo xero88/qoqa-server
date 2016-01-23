@@ -12,20 +12,21 @@ exports.index = function(req, res) {
 
 exports.login = function(req, res) {
 
-    Parse.User.logIn(req.body.username, req.body.password, {
-        success: function(user) {
-            res.render('user/login', {
-                message: 'Login is done',
-                type: 'success'
-            });
-        },
-        error: function(user, error) {
-            res.render('user/login', {
-                    message: error.message,
-                    type: 'danger'
-                }
-            );
-        }
+    Parse.User.logIn(req.body.username, req.body.password).then(function(user) {
+        res.redirect('/');
+    }, function(error) {
+        res.render('user/login', {
+                message: error.message,
+                type: 'danger'
+            }
+        );
     });
 
+
+
+};
+
+exports.logout = function(req, res) {
+    Parse.User.logOut();
+    res.redirect('/');
 };
