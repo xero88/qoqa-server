@@ -1,5 +1,6 @@
-var _ = require('underscore');
+var underscore = require('cloud/libs/underscore-min');
 var Gift = Parse.Object.extend('Gift');
+var Coupon = Parse.Object.extend('Coupon');
 
 exports.index = function(req, res) {
 
@@ -18,85 +19,145 @@ exports.index = function(req, res) {
 exports.add = function(req, res) {
 
     res.render('gift/add', {
-            message: '',
-            type: ''
+            message: 'a',
+            type: 'a'
         }
     );
 
 };
 
-exports.addSave = function(req, res) {
+exports.create = function(req, res) {
 
 
-    // TODO push to devices ?
-
-    var Gift = Parse.Object.extend("Gift");
-    var gift = new Gift();
-
-    gift.set("type", parseInt(req.body.giftType));
-    gift.set("name", req.body.name);
-    gift.set("winner", null);
-    gift.set("drawDate",  new Date()); // TODO date
-
-    gift.save(null, {
-        success: function(gift) {
-            res.render('gift/add', {
-                    message: 'Gift added !',
-                    type: 'success'
-                }
-            );
+    /*
+    gift.save(underscore.pick(req.body, 'name', 'giftType')).then(function() {
+            res.redirect('/');
         },
-        error: function(gift, error) {
-            res.render('gift/add', {
-                    message: error.message,
-                    type: 'danger'
-                }
-            );
-        }
-    });
+        function() {
+            res.send(500, 'Failed saving comment');
+        });*/
 
 };
 
 exports.edit = function(req, res) {
-
-    var giftId = req.params.id;
-
-    res.render('gift/edit', {
-
-        }
-    );
-
+    var query = new Parse.Query(Gift);
+    query.get(req.params.id).then(function(gift) {
+            if (gift) {
+                res.render('gift/edit', {
+                    gift: gift
+                })
+            } else {
+                res.send('specified gift does not exist')
+            }
+        },
+        function() {
+            res.send(500, 'Failed finding gift to edit');
+        });
 };
 
-exports.editSave = function(req, res) {
 
-    // TODO push to devices ?
+exports.update = function(req, res) {
 
-    var giftId = req.params.id;
-
-    res.render('gift/edit', {
-
-        }
-    );
+    var gift = new Gift();
+    gift.id = req.params.id;
+    gift.save(underscore.pick(req.body, 'name', 'giftType', 'drawDate')).then(function() {
+            res.redirect('/gift/edit/' + gift.id);
+        },
+        function() {
+            res.send(500, 'Failed saving gift !!');
+        });
 
 };
 
 exports.delete = function(req, res) {
 
+    var gift = new Gift();
+    gift.id = req.params.id;
 
-    // TODO push to devices ?
-
-    var giftId = req.params.id;
-
+    var query = new Parse.Query(Gift)
+    query.equalTo("gift", gift)
+    query.find().then(function(results) {
+        results.push(gift)
+        return Parse.Object.destroyAll(results)
+    }).then(function () {
+        res.redirect('/gift')
+    }, function() {
+        res.send(500, 'Failed deleting gift')
+    })
 };
+
 
 exports.doDraw = function(req, res) {
 
-    var giftId = req.params.id;
+        var winner = null;
 
-    res.render('gift/draw', {
+        // 2. save the winner
+        var gift = new Gift();
+        var query = new Parse.Query(Gift);
+        query.get(req.params.id, {
+            success: function(gift) {
 
-        }
-    );
+                if(gift.get("winner") != null)
+                    res.send(500, 'Error, winner still attributed');
+
+                // first we get all coupon of gift type
+                var coupon = new Coupon();
+                var query = new Parse.Query(Coupon);
+                query.equalTo("type", gift.get("type"));
+                query.notEqualTo("used", true);
+                query.find({
+                    success: function (coupons) {
+
+                        if(coupons.length == 0){
+                            res.send(500, 'No coupons!'); // TODO bizarre passe pas...
+                        }
+
+                        // 1. Randomly choose winner
+                        var winnerCoupon = coupons[Math.floor(Math.random() * coupons.length)];
+                        winner = winnerCoupon.get("user");
+
+                        // set coupon as used
+                        winnerCoupon.set("used", true);
+                        winnerCoupon.save();
+
+                        gift.set("winner", winner);
+                        gift.save();
+
+                        // 2. Send push notification to query
+                        var channel = "QoQa_" + winner.id;
+                        console.log("New winner push : " + channel);
+                        Parse.Push.send({
+                            channels: [ channel ],
+                            data: {
+                                alert: "You are the winner !"
+                            }
+                        }, {
+                            success: function() {
+                                res.render('gift/draw', {
+                                        winner: winner
+                                    }
+                                );
+                            },
+                            error: function(error) {
+                                res.send(500, 'Error at push : ' + error.message);
+                            }
+                        });
+
+
+                    },
+                    error: function (object, error) {
+                        res.send(500, 'Error query coupon : ' + error.message);
+                    }
+                });
+
+            },
+            error: function(object, error) {
+                res.send(500, 'Error query gift : ' + error.message);
+            }
+        });
+
+        // 4. send push notification to all ? (there is a winner) // TODO
+
+
 
 };

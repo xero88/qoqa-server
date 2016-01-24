@@ -1,7 +1,7 @@
 // These two lines are required to initialize Express in Cloud Code.
 express = require('express');
 var moment = require('moment');
-var _ = require('underscore');
+var underscore = require('cloud/libs/underscore-min');
 var parseExpressHttpsRedirect = require('parse-express-https-redirect');
 var parseExpressCookieSession = require('parse-express-cookie-session');
 
@@ -12,6 +12,7 @@ app.use(parseExpressCookieSession({
     fetchUser: true
 }));
 
+app.locals.underscore = underscore;
 app.locals.formatTime = function(time) {
     return moment(time).format('D.MMMM.YYYY, hh:mm');
 };
@@ -29,7 +30,7 @@ require('cloud/triggers/coupon.js');
 app.set('views', 'cloud/views');  // Specify the folder to find templates
 app.set('view engine', 'ejs');    // Set the template engine
 app.use(express.bodyParser());    // Middleware for reading request body
-
+app.use(express.methodOverride());
 
 // Home
 app.get('/', homeController.index);
@@ -46,10 +47,11 @@ app.post('/register', registerController.register);
 // Login
 app.get('/gift', giftController.index);
 app.get('/gift/add', giftController.add);
-app.post('/gift/add', giftController.addSave);
+app.post('/gift/add', giftController.create);
 app.get('/gift/edit/:id', giftController.edit);
-app.put('/gift/edit/:id', giftController.editSave);
+app.post('/gift/edit/:id', giftController.update);
 app.get('/gift/delete/:id', giftController.delete);
+app.get('/gift/draw/:id', giftController.doDraw);
 
 // Attach the Express app to Cloud Code.
 app.listen();

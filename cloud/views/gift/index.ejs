@@ -4,44 +4,41 @@
 
   <a href="/gift/add">Add gift</a>
 
+    <% if (!underscore.isEmpty(gifts)) { %>
 
-<div class='all_comments_body'>
-    <div class='comments_container'>
+    <h2>All Comments</h2>
+    <% gifts.forEach(function(gift) { %>
 
-
-
-        <h2>All Comments</h2>
-        <% gifts.forEach(function(gift) { %>
-
-        <div class='comment_item'>
-            <div class='comment_body'>
-                <%= gift.get('name') %>
-            </div>
-
-            <div class='comment_footer'>
-                <%= gift.get('type') %>
-                <div class='pipe_separator'>|</div>
-                <%= formatTime(gift.get('drawDate')) %>
-            </div>
-
-            <div class='comment_actions'>
-                <a href="<%= '/gift/edit/' + gift.id %>">Edit</a>
-                <form class='link_button_form' method='post' action="<%= '/gift/' + gift.id %>">
-                    <!-- This hidden element causes express.methodOverride middleware to override
-                    the HTTP method from post to delete for a truly RESTful interface. -->
-                    <input type='hidden' name='_method' value='delete' />
-                    <input class='link_button' type='submit' value='delete' />
-                </form>
-            </div>
+    <div class='comment_item'>
+        <div class='comment_body'>
+            <%= gift.get('name') %>
         </div>
 
-        <% }) %>
+        <div class='comment_footer'>
+            <%= gift.get('type') %>
+            <%= formatTime(gift.get('drawDate')) %>
+        </div>
 
+        <% if (gift.get('winner') != null) { %>
+            <div class='winner'>
+                <%= gift.get('winner').id %>
+            </div>
+        <% } %>
 
+        <div class='comment_actions'>
+            <% if (gift.get('winner') == null) { %>
+            <a href="<%= '/gift/draw/' + gift.id %>">Do draw</a>
+            <% } %>
+            <a href="<%= '/gift/edit/' + gift.id %>">Edit</a>
+            <a href="<%= '/gift/delete/' + gift.id %>">Delete</a>
+        </div>
     </div>
-</div>
 
-GIFT
+    <% }) %>
+
+    <% } else { %>
+    <p>No gift yet.</p>
+    <% } %>
 
 </div>
 
