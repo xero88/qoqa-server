@@ -1,5 +1,7 @@
 // These two lines are required to initialize Express in Cloud Code.
 express = require('express');
+var moment = require('moment');
+var _ = require('underscore');
 var parseExpressHttpsRedirect = require('parse-express-https-redirect');
 var parseExpressCookieSession = require('parse-express-cookie-session');
 
@@ -9,6 +11,10 @@ app.use(express.cookieParser('SECRET_SIGNING_KEY'));
 app.use(parseExpressCookieSession({
     fetchUser: true
 }));
+
+app.locals.formatTime = function(time) {
+    return moment(time).format('D.MMMM.YYYY, hh:mm');
+};
 
 // controllers
 var homeController = require('cloud/controllers/home.js');

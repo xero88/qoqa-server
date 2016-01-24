@@ -1,23 +1,48 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Gift</title>
-
-  <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-        integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
-        crossorigin="anonymous">
-
-</head>
-<body>
+<% include ../_header %>
 
 <div class="container">
 
   <a href="/gift/add">Add gift</a>
 
+
+<div class='all_comments_body'>
+    <div class='comments_container'>
+
+
+
+        <h2>All Comments</h2>
+        <% gifts.forEach(function(gift) { %>
+
+        <div class='comment_item'>
+            <div class='comment_body'>
+                <%= gift.get('name') %>
+            </div>
+
+            <div class='comment_footer'>
+                <%= gift.get('type') %>
+                <div class='pipe_separator'>|</div>
+                <%= formatTime(gift.get('drawDate')) %>
+            </div>
+
+            <div class='comment_actions'>
+                <a href="<%= '/gift/edit/' + gift.id %>">Edit</a>
+                <form class='link_button_form' method='post' action="<%= '/gift/' + gift.id %>">
+                    <!-- This hidden element causes express.methodOverride middleware to override
+                    the HTTP method from post to delete for a truly RESTful interface. -->
+                    <input type='hidden' name='_method' value='delete' />
+                    <input class='link_button' type='submit' value='delete' />
+                </form>
+            </div>
+        </div>
+
+        <% }) %>
+
+
+    </div>
+</div>
+
 GIFT
 
 </div>
 
-</body>
-</html>
+<% include ../_footer %>

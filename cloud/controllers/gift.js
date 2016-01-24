@@ -1,10 +1,18 @@
+var _ = require('underscore');
+var Gift = Parse.Object.extend('Gift');
 
 exports.index = function(req, res) {
 
-    res.render('gift/index', {
-
-        }
-    );
+    var query = new Parse.Query(Gift);
+    query.descending('createdAt');
+    query.find().then(function(results) {
+            res.render('gift/index', {
+                gifts: results
+            });
+        },
+        function() {
+            res.send(500, 'Failed loading posts');
+        });
 };
 
 exports.add = function(req, res) {
@@ -18,6 +26,9 @@ exports.add = function(req, res) {
 };
 
 exports.addSave = function(req, res) {
+
+
+    // TODO push to devices ?
 
     var Gift = Parse.Object.extend("Gift");
     var gift = new Gift();
@@ -48,7 +59,7 @@ exports.addSave = function(req, res) {
 
 exports.edit = function(req, res) {
 
-    var id = req.params.id;
+    var giftId = req.params.id;
 
     res.render('gift/edit', {
 
@@ -59,7 +70,9 @@ exports.edit = function(req, res) {
 
 exports.editSave = function(req, res) {
 
-    var id = req.params.id;
+    // TODO push to devices ?
+
+    var giftId = req.params.id;
 
     res.render('gift/edit', {
 
@@ -70,6 +83,20 @@ exports.editSave = function(req, res) {
 
 exports.delete = function(req, res) {
 
-    var id = req.params.id;
+
+    // TODO push to devices ?
+
+    var giftId = req.params.id;
+
+};
+
+exports.doDraw = function(req, res) {
+
+    var giftId = req.params.id;
+
+    res.render('gift/draw', {
+
+        }
+    );
 
 };
