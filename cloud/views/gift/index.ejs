@@ -1,45 +1,41 @@
 <% include ../_header %>
 
-<div class="container">
-
-  <a href="/gift/add">Add gift</a>
-
     <% if (!underscore.isEmpty(gifts)) { %>
 
-    <h2>All Comments</h2>
+    <table class="table table-condensed">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Draw date</th>
+        <th>Winner</th>
+    </tr>
+    </thead>
+    <tbody>
     <% gifts.forEach(function(gift) { %>
-
-    <div class='comment_item'>
-        <div class='comment_body'>
-            <%= gift.get('name') %>
-        </div>
-
-        <div class='comment_footer'>
-            <%= gift.get('type') %>
-            <%= formatTime(gift.get('drawDate')) %>
-        </div>
-
-        <% if (gift.get('winner') != null) { %>
-            <div class='winner'>
-                <%= gift.get('winner').id %>
-            </div>
-        <% } %>
-
-        <div class='comment_actions'>
-            <% if (gift.get('winner') == null) { %>
-            <a href="<%= '/gift/draw/' + gift.id %>">Do draw</a>
-            <% } %>
-            <a href="<%= '/gift/edit/' + gift.id %>">Edit</a>
-            <a href="<%= '/gift/delete/' + gift.id %>">Delete</a>
-        </div>
-    </div>
-
+        <tr>
+            <td><%= gift.get('name') %></td>
+            <td><%= getGiftType(gift.get('type')) %></td>
+            <td><%= formatTime(gift.get('drawDate')) %></td>
+            <td>
+                <% if (gift.get('winner') != null) { %>
+                    <%= gift.get('winner').id %>
+                <% } else { %>
+                    <a class="btn btn-success" href="<%= '/gift/draw/' + gift.id %>">Do draw</a>
+                <% } %>
+            </td>
+            <td>
+                <a class="btn btn-info" href="<%= '/gift/edit/' + gift.id %>">Edit</a>
+                <a class="btn btn-danger" href="<%= '/gift/delete/' + gift.id %>">Delete</a>
+            </td>
+        </tr>
     <% }) %>
-
+    </tbody>
+    </table>
     <% } else { %>
     <p>No gift yet.</p>
     <% } %>
 
-</div>
+    <a class="btn btn-success" href="/gift/add">Add gift</a>
 
 <% include ../_footer %>

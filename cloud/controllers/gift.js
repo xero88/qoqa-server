@@ -156,8 +156,4 @@ exports.doDraw = function(req, res) {
             }
         });
 
-        // 4. send push notification to all ? (there is a winner) // TODO
-
-
-
 };

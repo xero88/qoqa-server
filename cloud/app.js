@@ -16,6 +16,22 @@ app.locals.underscore = underscore;
 app.locals.formatTime = function(time) {
     return moment(time).format('D.MMMM.YYYY, hh:mm');
 };
+app.locals.currentUser = function() {
+    return Parse.User.current();
+};
+app.locals.getGiftType = function(intType) {
+    if(intType == 3){
+        return "Bronze";
+    }
+    else if(intType == 2){
+        return "Silver";
+    }
+    else if(intType == 1){
+        return "Gold";
+    }
+};
+
+
 
 // controllers
 var homeController = require('cloud/controllers/home.js');
