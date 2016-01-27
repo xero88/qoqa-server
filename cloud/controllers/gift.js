@@ -19,8 +19,8 @@ exports.index = function(req, res) {
 exports.add = function(req, res) {
 
     res.render('gift/add', {
-            message: 'a',
-            type: 'a'
+            message: '',
+            type: ''
         }
     );
 
@@ -28,14 +28,12 @@ exports.add = function(req, res) {
 
 exports.create = function(req, res) {
 
-
-    /*
     gift.save(underscore.pick(req.body, 'name', 'giftType')).then(function() {
             res.redirect('/');
         },
         function() {
             res.send(500, 'Failed saving comment');
-        });*/
+        });
 
 };
 
@@ -110,6 +108,7 @@ exports.doDraw = function(req, res) {
 
                         if(coupons.length == 0){
                             res.send(500, 'No coupons!'); // TODO bizarre passe pas...
+                            return;
                         }
 
                         // 1. Randomly choose winner
@@ -129,7 +128,8 @@ exports.doDraw = function(req, res) {
                         Parse.Push.send({
                             channels: [ channel ],
                             data: {
-                                alert: "You are the winner !"
+                                alert: "You are the winner !",
+                                giftId: gift.id
                             }
                         }, {
                             success: function() {
