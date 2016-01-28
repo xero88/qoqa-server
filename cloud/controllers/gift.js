@@ -128,7 +128,7 @@ exports.doDraw = function(req, res) {
                         Parse.Push.send({
                             channels: [ channel ],
                             data: {
-                                alert: "You are the winner !",
+                                alert: "Vous avez gagn\351 !",
                                 giftId: gift.id
                             }
                         }, {
