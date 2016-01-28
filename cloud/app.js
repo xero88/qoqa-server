@@ -60,7 +60,7 @@ app.get('/logout', loginController.logout);
 app.get('/register', registerController.index);
 app.post('/register', registerController.register);
 
-// Login
+// Gift
 app.get('/gift', giftController.index);
 app.get('/gift/add', giftController.add);
 app.post('/gift/add', giftController.create);
@@ -68,6 +68,7 @@ app.get('/gift/edit/:id', giftController.edit);
 app.post('/gift/edit/:id', giftController.update);
 app.get('/gift/delete/:id', giftController.delete);
 app.get('/gift/draw/:id', giftController.doDraw);
+app.get('/gift/undraw/:id', giftController.doUnDraw);
 
 // Attach the Express app to Cloud Code.
 app.listen();

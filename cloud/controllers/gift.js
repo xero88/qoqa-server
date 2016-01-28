@@ -157,3 +157,29 @@ exports.doDraw = function(req, res) {
         });
 
 };
+
+exports.doUnDraw = function(req, res) {
+
+    var gift = new Gift();
+    gift.id = req.params.id;
+
+    console.log("Id query : " + req.params.id);
+    console.log("Id gift : " + gift.id);
+
+    var query = new Parse.Query(Gift);
+    query.equalTo("objectId", gift.id);
+    query.first({
+        success: function(gift) {
+
+            console.log("New winner push : " + gift.id);
+
+            gift.set("winner", null);
+            gift.save();
+            res.redirect('/gift')
+        },
+        error: function(error) {
+            console.log("Error: " + error.code + " " + error.message);
+            res.send(500, 'Error query gift : ' + error.message);
+        }
+    });
+};

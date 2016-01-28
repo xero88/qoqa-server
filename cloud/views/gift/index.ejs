@@ -19,14 +19,14 @@
             <td><%= formatTime(gift.get('drawDate')) %></td>
             <td>
                 <% if (gift.get('winner') != null) { %>
-                    <%= gift.get('winner').id %>
+                    <a class="btn btn-danger" href="<%= '/gift/undraw/' + gift.id %>">Undraw</a>
                 <% } else { %>
                     <a class="btn btn-success" href="<%= '/gift/draw/' + gift.id %>">Do draw</a>
                 <% } %>
             </td>
             <td>
-                <a class="btn btn-info" href="<%= '/gift/edit/' + gift.id %>">Edit</a>
-                <a class="btn btn-danger" href="<%= '/gift/delete/' + gift.id %>">Delete</a>
+                <!--<a class="btn btn-info" href="<%= '/gift/edit/' + gift.id %>">Edit</a>
+                <a class="btn btn-danger" href="<%= '/gift/delete/' + gift.id %>">Delete</a>-->
             </td>
         </tr>
     <% }) %>
@@ -36,6 +36,6 @@
     <p>No gift yet.</p>
     <% } %>
 
-    <a class="btn btn-success" href="/gift/add">Add gift</a>
+    <!--<a class="btn btn-success" href="/gift/add">Add gift</a>-->
 
 <% include ../_footer %>
